@@ -1,0 +1,13 @@
+{
+  "name": "peel",
+  "version": "0.1.0",
+  "description": "A daily puzzle where you peel back an obfuscated one-liner move by move until the plaintext is revealed.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "author": "Charlie Krug",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ctkrug/peel.git"
+  }
+}
