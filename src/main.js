@@ -146,7 +146,7 @@ function mount(root) {
       await navigator.clipboard.writeText(text);
       winShareStatus.textContent = "Copied to clipboard!";
     } catch {
-      winShareStatus.textContent = text;
+      winShareStatus.textContent = `Couldn't access the clipboard — copy manually:\n${text}`;
     }
   });
 
