@@ -21,16 +21,21 @@ It is not a game. Nothing today turns "decode the obfuscated one-liner" into a b
 shareable, scored daily puzzle the way Wordle turned five-letter words into a habit. Peel is
 that game.
 
-## Core features (planned)
+## Core features
 
-- A hand-built string-transform engine that chains arbitrary encodings (base64, hex, ROT13,
-  URL-encoding, string reversal, nested `eval` unwrapping) and validates partial decode state at
-  every move.
-- A daily puzzle, calibrated by hand for difficulty and for a genuinely funny/interesting
-  plaintext payoff.
-- A move-by-move reveal on a canvas board: each click on a transform button visibly peels one
-  layer off the obfuscated string.
-- Scoring by move count + time, with a shareable result grid (Wordle-style spoiler-free share).
+- A hand-built string-transform engine (base64, hex, ROT13, URL-encoding, string reversal) that
+  chains operations and validates partial decode state at every move.
+- A move-by-move reveal on a canvas board: each click on a transform button peels one layer off
+  the obfuscated string with a crossfade, and wrong/off-path moves shake the board.
+- Move history, undo, a live timer that freezes on solve, and a win overlay with your stats.
+- Synth WebAudio SFX (hover/success/fail/win) with a persisted mute toggle — no audio files.
+- Terminal/CRT-phosphor visual direction end to end (see [`docs/DESIGN.md`](docs/DESIGN.md)).
+
+## Planned
+
+- Nested `eval` unwrapping, additional hand-authored puzzles, and deterministic daily rotation
+  (see [`docs/BACKLOG.md`](docs/BACKLOG.md) Epic 4).
+- A shareable, spoiler-free result grid (Wordle-style).
 - A streak/history view so daily play compounds over time.
 
 ## Stack
@@ -42,7 +47,9 @@ that game.
 
 ## Status
 
-Early scaffold — see [`docs/VISION.md`](docs/VISION.md) for the full design and
+The core peel loop and its juice (animation, sound, win screen) are playable end to end against
+one hand-verified sample puzzle. See [`docs/VISION.md`](docs/VISION.md) for the full design,
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the module map, and
 [`docs/BACKLOG.md`](docs/BACKLOG.md) for the build plan.
 
 ## Development
