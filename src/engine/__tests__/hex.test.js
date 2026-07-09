@@ -17,4 +17,8 @@ describe("hex", () => {
   it("rejects non-hex characters", () => {
     expect(() => hexDecode("zz")).toThrow();
   });
+
+  it("round-trips multi-byte unicode text", () => {
+    expect(hexDecode(hexEncode("échó 🔥"))).toBe("échó 🔥");
+  });
 });
