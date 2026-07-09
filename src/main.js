@@ -13,7 +13,9 @@ function mount(root) {
       <p class="tagline">${SAMPLE_PUZZLE.title}</p>
     </header>
     <main class="layout">
-      <canvas id="board" class="board"></canvas>
+      <div class="board-frame">
+        <canvas id="board" class="board"></canvas>
+      </div>
       <aside class="sidebar">
         <section>
           <h2>Toolbox</h2>
@@ -106,7 +108,30 @@ function mount(root) {
     update();
   });
 
+  startWordmarkGlitch(root.querySelector(".wordmark"));
+
   update();
+}
+
+const WORDMARK_GLITCH_FRAME = "cGVlbA==";
+const WORDMARK_GLITCH_INTERVAL_MS = 6000;
+const WORDMARK_GLITCH_DURATION_MS = 100;
+
+function startWordmarkGlitch(wordmarkEl) {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
+
+  const cleanText = wordmarkEl.textContent;
+  function glitch() {
+    wordmarkEl.textContent = WORDMARK_GLITCH_FRAME;
+    setTimeout(() => {
+      wordmarkEl.textContent = cleanText;
+    }, WORDMARK_GLITCH_DURATION_MS);
+  }
+
+  glitch();
+  setInterval(glitch, WORDMARK_GLITCH_INTERVAL_MS);
 }
 
 mount(document.getElementById("app"));
