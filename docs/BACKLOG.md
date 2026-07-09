@@ -5,7 +5,7 @@ no vibes. Story 1.1 is the wow moment from the project brief and ships first.
 
 ## Epic 1 — Core peel loop
 
-- [ ] **1.1 Wow moment: solve the sample puzzle end to end**
+- [x] **1.1 Wow moment: solve the sample puzzle end to end**
   - Loading the app shows the fully obfuscated `SAMPLE_PUZZLE.obfuscated` string on the board and
     nothing else is pre-decoded.
   - Clicking the correct next operation from `SAMPLE_PUZZLE.solutionChain`, in order, visibly
@@ -13,19 +13,19 @@ no vibes. Story 1.1 is the wow moment from the project brief and ships first.
   - After the final correct move the board shows `SAMPLE_PUZZLE.plaintext` exactly and a timer
     that was running stops (its displayed value no longer changes on subsequent renders).
 
-- [ ] **1.2 Move history panel**
+- [x] **1.2 Move history panel**
   - Every attempted operation (successful or not) appears in a visible list in the order it was
     played, labeled with the operation's display name.
   - A successful move's list entry shows the resulting text (or a truncated preview); a failed
     move's entry is visually distinguished (e.g. a different color/icon) from a successful one.
 
-- [ ] **1.3 Undo**
+- [x] **1.3 Undo**
   - An "Undo" control is present and, when clicked after at least one move, restores
     `currentText` to the value it held before the last move and removes that move from history.
   - Undo is disabled (or a no-op) when there is no move history, and disabled once the puzzle is
     complete.
 
-- [ ] **1.4 Decoy/wrong-move feedback**
+- [x] **1.4 Decoy/wrong-move feedback**
   - Playing an operation that is not the next step in the solution chain still applies if it's
     syntactically valid (per `docs/VISION.md`'s "decoys" design decision) and is visually marked
     as off-path in the history, without ending or resetting the puzzle.
