@@ -1,9 +1,16 @@
+import { randomGlyphs } from "./glitchText.js";
+
 const BG = "#101714";
 const TEXT = "#d9f5e3";
 const ACCENT = "#4ef29c";
+const CROSSFADE_MS = 120;
+const STATIC_FRAME_START = 0.45;
+const STATIC_FRAME_END = 0.6;
 
 export function createRenderer(canvas) {
   const ctx = canvas.getContext("2d");
+  let displayedText = "";
+  let animationHandle = null;
 
   function resize() {
     const ratio = window.devicePixelRatio || 1;
@@ -13,7 +20,7 @@ export function createRenderer(canvas) {
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
   }
 
-  function render(text) {
+  function drawFrame(text) {
     const { width, height } = canvas.getBoundingClientRect();
     ctx.fillStyle = BG;
     ctx.fillRect(0, 0, width, height);
@@ -27,6 +34,51 @@ export function createRenderer(canvas) {
     ctx.strokeStyle = ACCENT;
     ctx.lineWidth = 2;
     ctx.strokeRect(1, 1, width - 2, height - 2);
+  }
+
+  function cancelAnimation() {
+    if (animationHandle !== null) {
+      cancelAnimationFrame(animationHandle);
+      animationHandle = null;
+    }
+  }
+
+  function render(text) {
+    cancelAnimation();
+    displayedText = text;
+    drawFrame(text);
+  }
+
+  /** Crossfades to `text` over 120ms with a one-frame static flicker mid-transition. */
+  function transitionTo(text, reduceMotion = false) {
+    if (reduceMotion) {
+      render(text);
+      return;
+    }
+
+    cancelAnimation();
+    const start = performance.now();
+    const glyphLength = Math.max(displayedText.length, text.length, 8);
+
+    function step(now) {
+      const progress = Math.min((now - start) / CROSSFADE_MS, 1);
+      if (progress >= STATIC_FRAME_START && progress < STATIC_FRAME_END) {
+        drawFrame(randomGlyphs(glyphLength));
+      } else if (progress < STATIC_FRAME_START) {
+        drawFrame(displayedText);
+      } else {
+        drawFrame(text);
+      }
+
+      if (progress < 1) {
+        animationHandle = requestAnimationFrame(step);
+      } else {
+        displayedText = text;
+        animationHandle = null;
+      }
+    }
+
+    animationHandle = requestAnimationFrame(step);
   }
 
   function wrapText(context, text, x, y, maxWidth, lineHeight) {
@@ -50,5 +102,5 @@ export function createRenderer(canvas) {
   }
 
   resize();
-  return { resize, render };
+  return { resize, render, transitionTo };
 }
