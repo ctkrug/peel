@@ -11,6 +11,11 @@ describe("url-encoding", () => {
   it("rejects a malformed percent-escape", () => {
     expect(() => urlDecode("100% not a %zz escape")).toThrow();
   });
+
+  it("round-trips unicode text", () => {
+    const text = "échó 🔥 says hi";
+    expect(urlDecode(urlEncode(text))).toBe(text);
+  });
 });
 
 describe("reverse", () => {
