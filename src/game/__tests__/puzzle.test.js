@@ -17,6 +17,13 @@ describe("elapsedMs", () => {
     expect(elapsedMs(state, 4500)).toBe(3500);
   });
 
+  it("never goes negative if the system clock moves backward mid-solve", () => {
+    let state = createPuzzleState(SAMPLE_PUZZLE);
+    state = attemptMove(state, "hex-decode", 5000);
+
+    expect(elapsedMs(state, 1000)).toBe(0);
+  });
+
   it("freezes at the exact solve time once complete", () => {
     let state = createPuzzleState(SAMPLE_PUZZLE);
     const [first, ...rest] = SAMPLE_PUZZLE.solutionChain;
