@@ -24,6 +24,11 @@ describe("runChain", () => {
 });
 
 describe("chainReachesTarget", () => {
+  it("treats an empty operation list as reaching the target only if already there", () => {
+    expect(chainReachesTarget("already plain", [], "already plain")).toBe(true);
+    expect(chainReachesTarget("still obfuscated", [], "plaintext")).toBe(false);
+  });
+
   it("confirms a correct move sequence", () => {
     const plaintext = "echo peeled";
     const obfuscated = base64Encode(rot13(plaintext));
