@@ -123,6 +123,18 @@ button:disabled {
   gap: var(--space-1);
 }
 
+.undo-button {
+  margin-top: var(--space-2);
+  width: 100%;
+  border-color: var(--accent-support);
+  color: var(--accent-support);
+}
+
+.undo-button:hover:not(:disabled) {
+  border-color: var(--accent-support);
+  box-shadow: 0 0 16px rgba(255, 180, 84, 0.35);
+}
+
 .move-count {
   margin: 0;
 }
