@@ -97,12 +97,62 @@ button:disabled {
   padding: var(--space-3) var(--space-4) var(--space-6);
 }
 
+.board-frame {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
 .board {
+  display: block;
   width: 100%;
   height: 50vh;
   background: var(--surface-1);
   border-radius: var(--radius);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.board-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.18) 0px,
+    rgba(0, 0, 0, 0.18) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: multiply;
+}
+
+.board-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.65);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .board-frame::before {
+    animation: crt-flicker 6s infinite;
+  }
+}
+
+@keyframes crt-flicker {
+  0%,
+  96%,
+  100% {
+    opacity: 1;
+  }
+  97% {
+    opacity: 0.85;
+  }
+  98% {
+    opacity: 1;
+  }
 }
 
 .sidebar {
