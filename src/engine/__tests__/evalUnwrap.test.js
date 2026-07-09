@@ -41,4 +41,8 @@ describe("evalUnwrap", () => {
   it("leaves an argument that doesn't start and end with the same quote unstripped", () => {
     expect(evalUnwrap('eval("a" + 5)')).toBe('"a" + 5');
   });
+
+  it("leaves a multi-character unquoted argument unstripped", () => {
+    expect(evalUnwrap("eval(ab)")).toBe("ab");
+  });
 });
