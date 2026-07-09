@@ -1,5 +1,5 @@
 import { createPuzzleState, elapsedMs, moveCount } from "./game/puzzle.js";
-import { attemptMove } from "./game/validator.js";
+import { attemptMove, undoLastMove } from "./game/validator.js";
 import { listOperations, OPERATIONS } from "./engine/registry.js";
 import { createRenderer } from "./canvas/renderer.js";
 import { SAMPLE_PUZZLE } from "./data/samplePuzzle.js";
@@ -18,6 +18,7 @@ function mount(root) {
         <section>
           <h2>Toolbox</h2>
           <div id="toolbox" class="toolbox"></div>
+          <button id="undo" class="undo-button" type="button">Undo</button>
         </section>
         <section>
           <h2>Moves</h2>
@@ -34,6 +35,7 @@ function mount(root) {
   const moveCountEl = root.querySelector("#move-count");
   const timerEl = root.querySelector("#timer");
   const historyEl = root.querySelector("#history");
+  const undoButton = root.querySelector("#undo");
   const renderer = createRenderer(canvas);
 
   let state = createPuzzleState(SAMPLE_PUZZLE);
@@ -60,12 +62,18 @@ function mount(root) {
     toolbox.appendChild(button);
   }
 
+  undoButton.addEventListener("click", () => {
+    state = undoLastMove(state);
+    update();
+  });
+
   function update() {
     renderer.render(state.currentText);
     moveCountEl.textContent = `${moveCount(state)} move${moveCount(state) === 1 ? "" : "s"}`;
     toolbox.querySelectorAll("button").forEach((button) => {
       button.disabled = state.complete;
     });
+    undoButton.disabled = state.complete || state.history.length === 0;
     if (state.complete) {
       moveCountEl.textContent += " — solved!";
     }
