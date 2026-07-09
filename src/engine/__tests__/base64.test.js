@@ -17,4 +17,10 @@ describe("base64", () => {
   it("rejects invalid characters", () => {
     expect(() => base64Decode("not base64!!")).toThrow();
   });
+
+  it("round-trips a single leftover byte with double padding", () => {
+    // 4 bytes leaves one byte in the final group, exercising the "==" path.
+    expect(base64Encode("peel")).toBe("cGVlbA==");
+    expect(base64Decode("cGVlbA==")).toBe("peel");
+  });
 });
