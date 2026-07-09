@@ -21,4 +21,12 @@ describe("evalUnwrap", () => {
   it("rejects an atob(...) call not wrapped in eval(...)", () => {
     expect(() => evalUnwrap('atob("cGVlbA==")')).toThrow();
   });
+
+  it("rejects trailing content after the call's own closing paren", () => {
+    expect(() => evalUnwrap('eval("a") + eval("b")')).toThrow();
+  });
+
+  it("rejects an eval(...) call with a missing closing paren", () => {
+    expect(() => evalUnwrap('eval("hi"')).toThrow();
+  });
 });
