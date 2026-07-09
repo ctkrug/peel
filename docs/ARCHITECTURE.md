@@ -52,9 +52,9 @@ a closure variable) and the only place that touches the DOM.
     `undoLastMove`, `isOnPathMove` (compares an attempted op against the next not-yet-played step
     of `puzzle.solutionChain`, so an interleaved decoy doesn't block later correct steps from
     still counting as on-path).
-  - `dailyPuzzle.js`: `getDailyPuzzle(dateString, puzzles)` — hashes the date string to an index
-    into `puzzles` so the same date always resolves to the same puzzle with no server or
-    `Math.random()`; falls back to `SAMPLE_PUZZLE` if the list is empty.
+  - `dailyPuzzle.js`: `getDailyPuzzle(dateString, puzzles)` — looks up the puzzle whose `id`
+    exactly matches `dateString` (a puzzle's id IS the date it's assigned to); falls back to
+    `SAMPLE_PUZZLE` for any date with no authored puzzle, so the game is always playable.
 - **`canvas/`** — the board renderer, DOM/canvas dependent (untested directly; verified by hand).
   - `renderer.js`: `createRenderer(canvas)` → `{ resize, render, transitionTo }`. `render` draws
     instantly; `transitionTo` crossfades to new text over 120ms with a one-frame static-glyph
