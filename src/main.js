@@ -13,8 +13,9 @@ function mount(root) {
       <p class="tagline">${SAMPLE_PUZZLE.title}</p>
     </header>
     <main class="layout">
-      <div class="board-frame">
+      <div class="board-frame" id="board-frame">
         <canvas id="board" class="board"></canvas>
+        <div class="board-flash" aria-hidden="true"></div>
       </div>
       <aside class="sidebar">
         <section>
@@ -33,15 +34,23 @@ function mount(root) {
   `;
 
   const canvas = root.querySelector("#board");
+  const boardFrame = root.querySelector("#board-frame");
   const toolbox = root.querySelector("#toolbox");
   const moveCountEl = root.querySelector("#move-count");
   const timerEl = root.querySelector("#timer");
   const historyEl = root.querySelector("#history");
   const undoButton = root.querySelector("#undo");
   const renderer = createRenderer(canvas);
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   let state = createPuzzleState(SAMPLE_PUZZLE);
   let timerHandle = null;
+
+  function shakeBoard() {
+    boardFrame.classList.remove("board-frame--shake");
+    void boardFrame.offsetWidth; // restart the animation even if it's already running
+    boardFrame.classList.add("board-frame--shake");
+  }
 
   function tickTimer() {
     timerEl.textContent = formatElapsed(elapsedMs(state, Date.now()));
@@ -55,11 +64,13 @@ function mount(root) {
     const button = document.createElement("button");
     button.textContent = OPERATIONS[operationId].label;
     button.addEventListener("click", () => {
+      const movesBefore = state.history.length;
       state = attemptMove(state, operationId, Date.now());
       if (timerHandle === null && state.startedAt !== null && !state.complete) {
         timerHandle = setInterval(tickTimer, 250);
       }
-      update();
+      const lastMove = state.history.length > movesBefore ? state.history.at(-1) : null;
+      update(lastMove);
     });
     toolbox.appendChild(button);
   }
@@ -69,8 +80,15 @@ function mount(root) {
     update();
   });
 
-  function update() {
-    renderer.render(state.currentText);
+  function update(lastMove = null) {
+    if (lastMove && lastMove.ok && lastMove.onPath) {
+      renderer.transitionTo(state.currentText, reduceMotion);
+    } else {
+      renderer.render(state.currentText);
+      if (lastMove) {
+        shakeBoard();
+      }
+    }
     moveCountEl.textContent = `${moveCount(state)} move${moveCount(state) === 1 ? "" : "s"}`;
     toolbox.querySelectorAll("button").forEach((button) => {
       button.disabled = state.complete;
