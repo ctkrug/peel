@@ -23,4 +23,8 @@ describe("base64", () => {
     expect(base64Encode("peel")).toBe("cGVlbA==");
     expect(base64Decode("cGVlbA==")).toBe("peel");
   });
+
+  it("round-trips multi-byte unicode text", () => {
+    expect(base64Decode(base64Encode("échó 🔥"))).toBe("échó 🔥");
+  });
 });
