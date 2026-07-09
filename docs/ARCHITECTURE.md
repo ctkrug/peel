@@ -7,6 +7,10 @@ and `docs/DESIGN.md` for the visual direction; `docs/BACKLOG.md` tracks what's b
 
 - `npm run dev` — Vite dev server.
 - `npm test` — `vitest run`, all pure logic (no DOM/canvas/audio required).
+- `npm run test:coverage` — same suite with a `@vitest/coverage-v8` line/branch report. Every
+  module under `engine/`, `game/`, `data/`, `ui/`, and `audio/` sits at 100% line coverage;
+  `main.js` and `canvas/renderer.js` show 0% because they're DOM/canvas-dependent and are
+  verified by hand instead (see the note on `canvas/` below).
 - `npm run build` — static production build to `dist/`, relative asset paths (`base: "./"` in
   `vite.config.js`) so it can be served from a subpath like `apps.charliekrug.com/peel/`.
 
