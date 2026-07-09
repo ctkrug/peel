@@ -60,9 +60,10 @@ puzzles. See [`docs/VISION.md`](docs/VISION.md) for the full design,
 
 ```sh
 npm install
-npm run dev      # local dev server
-npm test         # run the unit tests
-npm run build    # production build into dist/
+npm run dev             # local dev server
+npm test                # run the unit tests
+npm run test:coverage   # unit tests with a line/branch coverage report
+npm run build           # production build into dist/
 ```
 
 ## License
