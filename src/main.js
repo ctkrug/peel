@@ -4,6 +4,7 @@ import { listOperations, OPERATIONS } from "./engine/registry.js";
 import { createRenderer } from "./canvas/renderer.js";
 import { SAMPLE_PUZZLE } from "./data/samplePuzzle.js";
 import { formatElapsed } from "./ui/format.js";
+import { describeMove } from "./ui/historyView.js";
 
 function mount(root) {
   root.innerHTML = `
@@ -22,6 +23,7 @@ function mount(root) {
           <h2>Moves</h2>
           <p id="move-count" class="move-count">0 moves</p>
           <p id="timer" class="timer">0:00</p>
+          <ol id="history" class="history" aria-label="Move history"></ol>
         </section>
       </aside>
     </main>
@@ -31,6 +33,7 @@ function mount(root) {
   const toolbox = root.querySelector("#toolbox");
   const moveCountEl = root.querySelector("#move-count");
   const timerEl = root.querySelector("#timer");
+  const historyEl = root.querySelector("#history");
   const renderer = createRenderer(canvas);
 
   let state = createPuzzleState(SAMPLE_PUZZLE);
@@ -67,6 +70,27 @@ function mount(root) {
       moveCountEl.textContent += " — solved!";
     }
     tickTimer();
+    renderHistory();
+  }
+
+  function renderHistory() {
+    historyEl.innerHTML = "";
+    state.history.forEach((move) => {
+      const described = describeMove(move, OPERATIONS);
+      const item = document.createElement("li");
+      item.className = `history-entry history-entry--${described.status}`;
+
+      const label = document.createElement("span");
+      label.className = "history-entry__label";
+      label.textContent = described.label;
+
+      const detail = document.createElement("span");
+      detail.className = "history-entry__detail";
+      detail.textContent = described.detail;
+
+      item.append(label, detail);
+      historyEl.appendChild(item);
+    });
   }
 
   window.addEventListener("resize", () => {
