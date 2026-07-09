@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createPuzzleState, moveCount } from "../puzzle.js";
-import { attemptMove, undoLastMove } from "../validator.js";
+import { attemptMove, isOnPathMove, undoLastMove } from "../validator.js";
 import { SAMPLE_PUZZLE } from "../../data/samplePuzzle.js";
 
 describe("sample puzzle", () => {
@@ -23,6 +23,7 @@ describe("sample puzzle", () => {
     expect(state.complete).toBe(false);
     expect(state.history).toHaveLength(1);
     expect(state.history[0].ok).toBe(true);
+    expect(state.history[0].onPath).toBe(false);
     expect(state.currentText).not.toBe(SAMPLE_PUZZLE.plaintext);
   });
 
@@ -59,5 +60,33 @@ describe("sample puzzle", () => {
     const solvedState = attemptMove(state, "rot13", 2000);
 
     expect(solvedState).toBe(state);
+  });
+});
+
+describe("isOnPathMove / onPath tagging", () => {
+  it("is true for the first solution-chain step from a fresh state", () => {
+    const state = createPuzzleState(SAMPLE_PUZZLE);
+    expect(isOnPathMove(state, SAMPLE_PUZZLE.solutionChain[0])).toBe(true);
+    expect(isOnPathMove(state, "reverse")).toBe(false);
+  });
+
+  it("keeps counting on-path progress across an interleaved decoy", () => {
+    let state = createPuzzleState(SAMPLE_PUZZLE);
+    state = attemptMove(state, SAMPLE_PUZZLE.solutionChain[0], 1000);
+    expect(state.history[0].onPath).toBe(true);
+
+    state = attemptMove(state, "reverse", 1001);
+    expect(state.history[1].onPath).toBe(false);
+
+    expect(isOnPathMove(state, SAMPLE_PUZZLE.solutionChain[1])).toBe(true);
+  });
+
+  it("tags a failed move as off-path even if it matches the next step", () => {
+    const puzzle = { ...SAMPLE_PUZZLE, solutionChain: ["hex-decode"], obfuscated: "not-hex" };
+    let state = createPuzzleState(puzzle);
+    state = attemptMove(state, "hex-decode", 1000);
+
+    expect(state.history[0].ok).toBe(false);
+    expect(state.history[0].onPath).toBe(false);
   });
 });
