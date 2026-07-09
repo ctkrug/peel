@@ -113,4 +113,11 @@ describe("createSfx", () => {
     const created = FakeAudioContext.instances[0].created;
     expect(created.filter((n) => n === "bufferSource")).toHaveLength(1);
   });
+
+  it("suppresses hover playback while muted", () => {
+    const sfx = createSfx(fakeStorage());
+    sfx.setMuted(true);
+    sfx.hover();
+    expect(FakeAudioContext.instances).toHaveLength(0);
+  });
 });
