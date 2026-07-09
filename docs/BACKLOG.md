@@ -34,26 +34,26 @@ no vibes. Story 1.1 is the wow moment from the project brief and ships first.
 
 ## Epic 2 — Juice & design polish
 
-- [ ] **2.1 Design polish pass**
+- [x] **2.1 Design polish pass**
   - The board, toolbox, and header visually match `docs/DESIGN.md`'s tokens (colors, type
     pairing, radius, shadow/glow) rather than the SCOPE-phase placeholder styling.
   - The CRT scanline/glow treatment and the wordmark glitch detail from `docs/DESIGN.md` §4 are
     implemented and respect `prefers-reduced-motion`.
 
-- [ ] **2.2 Peel animation**
+- [x] **2.2 Peel animation**
   - A successful move crossfades the board text over ~120ms with a one-frame static flicker
     instead of an instant text swap.
   - A failed/off-path move triggers a ~100ms board shake and a brief danger-red flash, per
     `docs/DESIGN.md`'s juice plan.
 
-- [ ] **2.3 Synth sound effects**
+- [x] **2.3 Synth sound effects**
   - `hover`, `move-success`, `move-fail`, and `win` sounds are synthesized via WebAudio
     (oscillator/noise nodes) with no binary audio files in the repo.
   - A mute toggle is present, its state persists across a page reload via `localStorage`, and the
     `AudioContext` is only created after a user gesture (no autoplay-policy console error on
     load).
 
-- [ ] **2.4 Win celebration**
+- [x] **2.4 Win celebration**
   - Reaching the plaintext shows an overlay with the final move count, elapsed time, and one
     primary call-to-action button.
   - The overlay includes a particle/motion flourish that is skipped (or reduced to a static
@@ -74,7 +74,7 @@ no vibes. Story 1.1 is the wow moment from the project brief and ships first.
     the same string is reproducible from `state.history` alone (pure function, covered by a
     unit test).
 
-- [ ] **3.3 Win-screen stats**
+- [x] **3.3 Win-screen stats**
   - The win overlay displays the final move count and elapsed time sourced directly from
     `state.history` / `state.completedAt - state.startedAt`, not a separately tracked value that
     could drift.
