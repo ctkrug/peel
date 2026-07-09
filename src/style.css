@@ -127,6 +127,12 @@ button:disabled {
   margin: 0;
 }
 
+.timer {
+  margin: var(--space-1) 0 0;
+  color: var(--accent-support);
+  font-variant-numeric: tabular-nums;
+}
+
 @media (min-width: 768px) {
   .layout {
     grid-template-columns: 65% 1fr;
