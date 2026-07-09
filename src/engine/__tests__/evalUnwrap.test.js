@@ -37,4 +37,8 @@ describe("evalUnwrap", () => {
   it("returns a too-short argument unchanged instead of stripping quotes", () => {
     expect(evalUnwrap("eval(5)")).toBe("5");
   });
+
+  it("leaves an argument that doesn't start and end with the same quote unstripped", () => {
+    expect(evalUnwrap('eval("a" + 5)')).toBe('"a" + 5');
+  });
 });
