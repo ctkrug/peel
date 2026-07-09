@@ -31,7 +31,7 @@ body {
 }
 
 body {
-  background: var(--bg);
+  background: radial-gradient(ellipse at top, #101a15 0%, var(--bg) 55%, #050807 100%);
   color: var(--text);
   font-family: var(--font-ui);
   font-size: 16px;
