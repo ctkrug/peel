@@ -34,4 +34,12 @@ describe("createMuteStore", () => {
     a.setMuted(true);
     expect(b.isMuted()).toBe(false);
   });
+
+  it("treats a hand-edited, non-boolean stored value as unmuted", () => {
+    const storage = fakeStorage();
+    storage.setItem("peel:muted", "yes");
+    const store = createMuteStore(storage);
+
+    expect(store.isMuted()).toBe(false);
+  });
 });
