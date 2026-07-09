@@ -61,13 +61,13 @@ no vibes. Story 1.1 is the wow moment from the project brief and ships first.
 
 ## Epic 3 — Scoring & sharing
 
-- [ ] **3.1 Live timer**
+- [x] **3.1 Live timer**
   - The timer starts on the first move (not on page load) and updates at least once per second
     while the puzzle is unsolved.
   - The timer freezes at the exact solve time once `state.complete` is true and does not resume
     on further interaction.
 
-- [ ] **3.2 Shareable result string**
+- [x] **3.2 Shareable result string**
   - A "Share" control generates a Wordle-style grid (one row/symbol per move, marking
     on-path/off-path/failed) that contains no plaintext or obfuscated text — spoiler-free.
   - Clicking "Share" copies the result string to the clipboard (with a visible confirmation) and
@@ -81,7 +81,7 @@ no vibes. Story 1.1 is the wow moment from the project brief and ships first.
 
 ## Epic 4 — Puzzle content & daily rotation groundwork
 
-- [ ] **4.1 Puzzle authoring format**
+- [x] **4.1 Puzzle authoring format**
   - A documented JSON shape for a puzzle (`id`, `title`, `obfuscated`, `solutionChain`,
     `plaintext`) exists, and at least two additional hand-authored puzzles beyond
     `SAMPLE_PUZZLE` validate against it (each has a unit test asserting
@@ -89,20 +89,20 @@ no vibes. Story 1.1 is the wow moment from the project brief and ships first.
   - Each new puzzle's plaintext is a genuinely different joke/script than the sample, not a
     reworded duplicate.
 
-- [ ] **4.2 Deterministic daily selection**
+- [x] **4.2 Deterministic daily selection**
   - Given a date string and the puzzle list, a pure function returns the same puzzle for the
     same date on every call (no server, no randomness at call time), covered by a unit test.
   - If the computed date has no authored puzzle, the function falls back to `SAMPLE_PUZZLE`
     instead of throwing.
 
-- [ ] **4.3 Nested `eval`-unwrap operation**
+- [x] **4.3 Nested `eval`-unwrap operation**
   - A new transform recognizes a wrapped `eval(...)` (or `eval(atob(...))`-style) call and
     returns its inner argument as plain text, with a unit test for at least one real nested
     example.
   - At least one puzzle in the authored set (from 4.1) uses this operation in its solution
     chain and passes the same `chainReachesTarget` check.
 
-- [ ] **4.4 Design polish: puzzle content pass**
+- [x] **4.4 Design polish: puzzle content pass**
   - Every authored puzzle (sample plus new) is played once end-to-end after the Epic 2 polish
     pass lands, confirming the peel animation and win screen render correctly for each, not just
     the original sample.
