@@ -121,11 +121,19 @@ button:disabled {
   opacity: 1;
 }
 
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .layout {
   display: grid;
   grid-template-columns: 1fr;
+  align-content: center;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4) var(--space-6);
+  flex: 1;
 }
 
 .board-frame {
