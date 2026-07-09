@@ -36,6 +36,12 @@ describe("describeMove", () => {
     expect(described.detail.endsWith("…")).toBe(true);
   });
 
+  it("leaves a preview at exactly the truncation boundary untouched", () => {
+    const exactText = "x".repeat(40);
+    const move = { operationId: "base64-decode", ok: true, onPath: true, text: exactText };
+    expect(describeMove(move, OPERATIONS).detail).toBe(exactText);
+  });
+
   it("falls back to the raw operation id if unknown", () => {
     const move = { operationId: "mystery-op", ok: true, onPath: false, text: "x" };
     expect(describeMove(move, OPERATIONS).label).toBe("mystery-op");
