@@ -1,4 +1,5 @@
 import { randomGlyphs } from "./glitchText.js";
+import { computeWrappedLines } from "./wrapText.js";
 
 const BG = "#101714";
 const TEXT = "#d9f5e3";
@@ -82,23 +83,9 @@ export function createRenderer(canvas) {
   }
 
   function wrapText(context, text, x, y, maxWidth, lineHeight) {
-    const words = text.split(" ");
-    const lines = [];
-    let line = "";
-
-    for (const word of words) {
-      const candidate = line ? `${line} ${word}` : word;
-      if (context.measureText(candidate).width > maxWidth && line) {
-        lines.push(line);
-        line = word;
-      } else {
-        line = candidate;
-      }
-    }
-    lines.push(line);
-
+    const lines = computeWrappedLines(text, maxWidth, (line) => context.measureText(line).width);
     const startY = y - ((lines.length - 1) * lineHeight) / 2;
-    lines.forEach((text, i) => context.fillText(text, x, startY + i * lineHeight));
+    lines.forEach((line, i) => context.fillText(line, x, startY + i * lineHeight));
   }
 
   resize();
