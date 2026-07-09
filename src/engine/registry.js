@@ -3,6 +3,7 @@ import { rot13 } from "./transforms/rot13.js";
 import { hexEncode, hexDecode } from "./transforms/hex.js";
 import { urlEncode, urlDecode } from "./transforms/urlEncoding.js";
 import { reverseString } from "./transforms/reverse.js";
+import { evalUnwrap } from "./transforms/evalUnwrap.js";
 
 export const OPERATIONS = {
   "base64-encode": { label: "Base64 encode", apply: base64Encode },
@@ -13,6 +14,7 @@ export const OPERATIONS = {
   "url-encode": { label: "URL encode", apply: urlEncode },
   "url-decode": { label: "URL decode", apply: urlDecode },
   "reverse": { label: "Reverse", apply: reverseString },
+  "eval-unwrap": { label: "eval() unwrap", apply: evalUnwrap },
 };
 
 export function listOperations() {
