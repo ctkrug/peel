@@ -1,60 +1,68 @@
 # Peel
 
-A daily puzzle where you peel back a real obfuscated one-liner — base64 chains, ROT13, hex,
-URL-encoding, nested `eval` — move by move until the plaintext script is revealed. Fewest moves
-wins.
+**▶ Live demo — [apps.charliekrug.com/peel](https://apps.charliekrug.com/peel/)**
 
-## What it is
+> Crack a new obfuscated one-liner every day.
 
-Every day, Peel ships one hand-crafted puzzle: a genuinely obfuscated shell/JS one-liner wrapped
-in a chain of reversible encodings. You pick a decode operation, watch that layer visibly unwind,
-and keep going until the garbage resolves into a short, readable, funny plaintext script. Your
-score is the move count and the clock.
+[![CI](https://github.com/ctkrug/peel/actions/workflows/ci.yml/badge.svg)](https://github.com/ctkrug/peel/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-4ef29c.svg)](LICENSE)
+
+Peel is a daily puzzle for people who like reading code they were never meant to read. Every day
+it hands you one genuinely obfuscated shell or JavaScript one-liner, wrapped in a chain of real
+encodings (base64, hex, ROT13, URL-encoding, string reversal, nested `eval`/`atob`). You pick
+decode operations one at a time and watch each layer visibly unwind until the garbage resolves
+into a short, readable, usually funny plaintext script. Solve it in the fewest moves.
 
 Think Wordle, but the payoff is a real deobfuscation "aha" instead of five colored squares.
 
-## Why
+![Peel mid-solve: two decode moves in, the board shows a half-peeled URL-encoded layer](docs/screenshot.png)
 
-[CyberChef](https://github.com/gchq/CyberChef) is the professional's power tool for this kind of
-work — dozens of operations, infinitely composable, built for CTF players and security analysts.
-It is not a game. Nothing today turns "decode the obfuscated one-liner" into a bite-sized,
-shareable, scored daily puzzle the way Wordle turned five-letter words into a habit. Peel is
-that game.
+## Who it's for
 
-## Core features
+Developers and CTF players who enjoy a quick daily brain-teaser, and anyone who has ever stared at
+a suspicious one-liner and wanted to know what it actually does. If you like puzzles about how code
+hides itself, this is a two-minute daily habit built for you.
 
-- A hand-built string-transform engine (base64, hex, ROT13, URL-encoding, string reversal, nested
-  `eval`/`atob` unwrapping) that chains operations and validates partial decode state at every
-  move.
-- A move-by-move reveal on a canvas board: each click on a transform button peels one layer off
-  the obfuscated string with a crossfade, and wrong/off-path moves shake the board.
-- Move history, undo, a live timer that freezes on solve, and a win overlay with your stats.
-- A deterministic daily puzzle: today's date resolves to the same hand-authored puzzle for
-  everyone, no server involved (see [`docs/PUZZLES.md`](docs/PUZZLES.md) for the format).
-- A spoiler-free, Wordle-style Share button on the win screen — copies your move grid (never the
-  plaintext or obfuscated text) to the clipboard.
-- Synth WebAudio SFX (hover/success/fail/win) with a persisted mute toggle — no audio files.
-- Terminal/CRT-phosphor visual direction end to end (see [`docs/DESIGN.md`](docs/DESIGN.md)).
+## What makes it good
 
-## Planned
+- **Real decoding, not a scripted animation.** Every obfuscated string is the actual output of the
+  same transform engine you use to solve it. When you press "Base64 decode," it runs base64 decode
+  on the current text. Off-path guesses that fail to apply shake the board instead of advancing.
+- **One move at a time.** Nine reversible operations in the toolbox. Each correct move peels one
+  layer with a CRT crossfade; a wrong or off-path move shakes and flashes red. Undo any move.
+- **Scored and shareable.** A live timer freezes on solve, and the win screen hands you a
+  spoiler-free result grid (one square per move, never the plaintext) to paste anywhere, Wordle-style.
+- **One puzzle a day, no server.** Today's date resolves to the same hand-authored puzzle for
+  everyone. Puzzles are static data, so the whole game ships as a static site with zero backend.
+- **Terminal-native feel.** A phosphor-green CRT aesthetic, synthesized WebAudio sound effects
+  (hover, success, fail, win) with a persisted mute toggle, and no binary audio assets.
 
-- A streak/history view so daily play compounds over time (see
-  [`docs/BACKLOG.md`](docs/BACKLOG.md) for what's left).
+## Play
+
+Open the [live demo](https://apps.charliekrug.com/peel/) and start peeling. To run it locally:
+
+```sh
+npm install
+npm run dev             # local dev server
+```
+
+Read one obfuscated string, pick the operation you think unwinds the outermost layer, and repeat.
+The move history marks each step as on-path, an off-path decoy, or a failed decode, so you always
+know where you stand.
+
+## How a puzzle is built
+
+Each puzzle is authored plaintext-first, then wrapped by running the engine's transforms in
+reverse. The solution chain stored with the puzzle is the exact inverse of that wrapping, so the
+game can verify at build time that the chain really does decode to the plaintext. See
+[`docs/PUZZLES.md`](docs/PUZZLES.md) for the format and authoring rules.
 
 ## Stack
 
-- Vanilla JavaScript, [Vite](https://vitejs.dev/) for dev/build, [Vitest](https://vitest.dev/)
+- Vanilla JavaScript, [Vite](https://vitejs.dev/) for dev and build, [Vitest](https://vitest.dev/)
   for unit tests.
-- Canvas 2D for the puzzle board and reveal animation — no UI framework.
-- Zero backend: puzzles are static JSON, ships as a static site.
-
-## Status
-
-The full v1 feature set is playable end to end: the core peel loop, its juice (animation, sound,
-win screen), a live timer, a shareable result, and daily rotation across multiple hand-verified
-puzzles. See [`docs/VISION.md`](docs/VISION.md) for the full design,
-[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the module map, and
-[`docs/BACKLOG.md`](docs/BACKLOG.md) for the build plan.
+- Canvas 2D for the puzzle board and its reveal animation. No UI framework.
+- Zero backend. Puzzles are static data; the build is a plain static site.
 
 ## Development
 
@@ -66,6 +74,12 @@ npm run test:coverage   # unit tests with a line/branch coverage report
 npm run build           # production build into dist/
 ```
 
+The transform engine, game state, and UI helpers sit at 100% line and branch coverage; the
+DOM/canvas wiring is verified by hand. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the
+module map and [`docs/DESIGN.md`](docs/DESIGN.md) for the visual direction.
+
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT, see [LICENSE](LICENSE).
+
+More of Charlie's projects → [apps.charliekrug.com](https://apps.charliekrug.com)
