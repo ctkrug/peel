@@ -6,6 +6,7 @@ import { createRenderer } from "./canvas/renderer.js";
 import { PUZZLES } from "./data/puzzles.js";
 import { formatElapsed } from "./ui/format.js";
 import { describeMove } from "./ui/historyView.js";
+import { buildShareText } from "./ui/shareResult.js";
 import { createSfx } from "./audio/sfx.js";
 import { randomGlyphs } from "./canvas/glitchText.js";
 
@@ -64,7 +65,11 @@ function mount(root) {
             <dd id="win-time">0:00</dd>
           </div>
         </dl>
-        <button id="win-play-again" class="win-card__cta" type="button">Play again</button>
+        <div class="win-card__actions">
+          <button id="win-share" class="win-card__cta win-card__cta--secondary" type="button">Share result</button>
+          <button id="win-play-again" class="win-card__cta" type="button">Play again</button>
+        </div>
+        <p id="win-share-status" class="win-card__share-status" role="status" aria-live="polite"></p>
       </div>
     </div>
   `;
@@ -82,6 +87,8 @@ function mount(root) {
   const winMovesEl = root.querySelector("#win-moves");
   const winTimeEl = root.querySelector("#win-time");
   const winPlayAgainButton = root.querySelector("#win-play-again");
+  const winShareButton = root.querySelector("#win-share");
+  const winShareStatus = root.querySelector("#win-share-status");
   const renderer = createRenderer(canvas);
   const sfx = createSfx(window.localStorage);
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -120,6 +127,7 @@ function mount(root) {
   function showWinOverlay() {
     winMovesEl.textContent = String(moveCount(state));
     winTimeEl.textContent = formatElapsed(elapsedMs(state, Date.now()));
+    winShareStatus.textContent = "";
     winOverlay.hidden = false;
     if (!reduceMotion) {
       spawnMatrixRain();
@@ -132,7 +140,18 @@ function mount(root) {
     winRain.innerHTML = "";
   }
 
+  winShareButton.addEventListener("click", async () => {
+    const text = buildShareText(state, Date.now());
+    try {
+      await navigator.clipboard.writeText(text);
+      winShareStatus.textContent = "Copied to clipboard!";
+    } catch {
+      winShareStatus.textContent = text;
+    }
+  });
+
   winPlayAgainButton.addEventListener("click", () => {
+    winShareStatus.textContent = "";
     hideWinOverlay();
     if (timerHandle !== null) {
       clearInterval(timerHandle);
