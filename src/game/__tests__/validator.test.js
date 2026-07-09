@@ -68,6 +68,17 @@ describe("sample puzzle", () => {
     expect(undoLastMove(state)).toBe(state);
   });
 
+  it("undo after only a failed move falls back to the original obfuscated text", () => {
+    const puzzle = { ...SAMPLE_PUZZLE, solutionChain: ["hex-decode"], obfuscated: "not-hex" };
+    let state = createPuzzleState(puzzle);
+    state = attemptMove(state, "hex-decode", 1000);
+
+    state = undoLastMove(state);
+
+    expect(state.history).toHaveLength(0);
+    expect(state.currentText).toBe(puzzle.obfuscated);
+  });
+
   it("undo is a no-op once the puzzle is complete", () => {
     let state = createPuzzleState(SAMPLE_PUZZLE);
     for (const operationId of SAMPLE_PUZZLE.solutionChain) {
