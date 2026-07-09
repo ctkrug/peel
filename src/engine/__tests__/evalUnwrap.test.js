@@ -29,4 +29,12 @@ describe("evalUnwrap", () => {
   it("rejects an eval(...) call with a missing closing paren", () => {
     expect(() => evalUnwrap('eval("hi"')).toThrow();
   });
+
+  it("tracks an escaped quote inside the string literal instead of ending it early", () => {
+    expect(evalUnwrap('eval("say \\"hi\\"")')).toBe('say \\"hi\\"');
+  });
+
+  it("returns a too-short argument unchanged instead of stripping quotes", () => {
+    expect(evalUnwrap("eval(5)")).toBe("5");
+  });
 });
