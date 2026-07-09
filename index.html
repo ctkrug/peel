@@ -3,10 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Peel — peel back the obfuscation</title>
+    <title>Peel — crack a new obfuscated one-liner every day</title>
     <meta
       name="description"
-      content="A daily puzzle where you peel back an obfuscated one-liner move by move until the plaintext is revealed."
+      content="A daily browser puzzle: peel a real obfuscated one-liner (base64, hex, ROT13, eval) apart move by move until the plaintext shows. Fewest moves wins."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Peel — crack a new obfuscated one-liner every day" />
+    <meta
+      property="og:description"
+      content="A daily browser puzzle: peel a real obfuscated one-liner apart one decode at a time until the plaintext shows. Fewest moves wins."
     />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,6 +25,81 @@
   </head>
   <body>
     <div id="app"></div>
+
+    <section class="about" aria-label="About Peel">
+      <div class="about__inner">
+        <h2>What is Peel?</h2>
+        <p>
+          Peel is a daily deobfuscation puzzle you play in the browser. Each day it gives you one
+          real obfuscated one-liner, a short shell or JavaScript command buried under a stack of
+          reversible encodings, and asks you to reveal the plaintext underneath. You solve it by
+          choosing decode operations from a toolbox: Base64, hex, ROT13, URL-encoding, string
+          reversal, and a syntactic <code>eval()</code>/<code>atob()</code> unwrap. Every operation
+          runs for real on the current text, so the string you see is always the genuine result of
+          the moves you have made, never a canned animation.
+        </p>
+        <p>
+          The goal is the fewest moves. A correct decode peels one layer and advances you toward the
+          answer; an off-path guess that still applies counts as a move but does not get you closer;
+          a decode that cannot apply is rejected and the board shakes. A live timer tracks your
+          solve and freezes the moment the plaintext appears. When you win, Peel builds a
+          spoiler-free result grid, one colored square per move, that you can share without giving
+          the puzzle away.
+        </p>
+
+        <h2>How to play</h2>
+        <ol>
+          <li>Read the obfuscated string on the board and guess which encoding wraps the outer layer.</li>
+          <li>Press the matching decode button in the toolbox and watch that layer unwind.</li>
+          <li>Repeat, using the move history to see which steps advanced the solve, until the plaintext shows.</li>
+          <li>Share your result grid, then come back tomorrow for a new puzzle.</li>
+        </ol>
+
+        <h2>FAQ</h2>
+        <dl class="faq">
+          <dt>Do I need to know how to code to play?</dt>
+          <dd>
+            No. Recognizing common encodings helps, but the toolbox is small and you learn the
+            patterns fast: text that ends in <code>=</code> is usually Base64, pairs of hex digits
+            are hex, and <code>%20</code> style escapes are URL-encoding. Trial and error is a valid
+            strategy, it just costs moves.
+          </dd>
+
+          <dt>Is my code actually being executed?</dt>
+          <dd>
+            No. The <code>eval()</code> unwrap is purely syntactic: it strips the wrapper text to
+            expose the inner string and never runs anything. Peel has no backend and executes none
+            of the puzzle content.
+          </dd>
+
+          <dt>Does everyone get the same puzzle?</dt>
+          <dd>
+            Yes. Today's date maps to a single hand-authored puzzle, so your result grid is
+            comparable to anyone else who played the same day.
+          </dd>
+
+          <dt>Can I undo a wrong move?</dt>
+          <dd>
+            Yes. Undo steps back through your history one move at a time, so you can explore a
+            decode path and back out of it without restarting.
+          </dd>
+
+          <dt>How is Peel different from CyberChef?</dt>
+          <dd>
+            CyberChef is a professional analysis tool with hundreds of composable operations. Peel
+            is a game: one puzzle a day, a small toolbox, a move counter, and a shareable score. It
+            is built to be fun in two minutes, not to be exhaustive.
+          </dd>
+        </dl>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <a href="https://github.com/ctkrug/peel">View on GitHub</a>
+      <span aria-hidden="true">·</span>
+      <a href="https://apps.charliekrug.com">More by Charlie Krug → apps.charliekrug.com</a>
+    </footer>
+
     <script type="module" src="src/main.js"></script>
   </body>
 </html>
