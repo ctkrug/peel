@@ -422,6 +422,12 @@ button:disabled {
   color: var(--text);
 }
 
+.win-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
 .win-card__cta {
   width: 100%;
   background: var(--accent);
@@ -433,6 +439,18 @@ button:disabled {
 
 .win-card__cta:hover {
   box-shadow: 0 0 16px rgba(78, 242, 156, 0.5);
+}
+
+.win-card__cta--secondary {
+  background: transparent;
+  color: var(--accent);
+}
+
+.win-card__share-status {
+  min-height: 1em;
+  margin: var(--space-1) 0 0;
+  color: var(--text-muted);
+  font-size: 13px;
 }
 
 @media (min-width: 768px) {
