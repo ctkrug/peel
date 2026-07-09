@@ -24,6 +24,12 @@ describe("PUZZLES", () => {
     expect(PUZZLES.some((puzzle) => puzzle.solutionChain.includes("eval-unwrap"))).toBe(true);
   });
 
+  it("every puzzle id is a YYYY-MM-DD date string, since that's what it's matched against", () => {
+    for (const puzzle of PUZZLES) {
+      expect(puzzle.id).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    }
+  });
+
   it("every puzzle has a distinct id, since getDailyPuzzle matches the first one found", () => {
     const ids = PUZZLES.map((puzzle) => puzzle.id);
     expect(new Set(ids).size).toBe(ids.length);
