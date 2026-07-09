@@ -7,6 +7,10 @@ describe("url-encoding", () => {
     const text = "curl http://x?a=1&b=2";
     expect(urlDecode(urlEncode(text))).toBe(text);
   });
+
+  it("rejects a malformed percent-escape", () => {
+    expect(() => urlDecode("100% not a %zz escape")).toThrow();
+  });
 });
 
 describe("reverse", () => {
@@ -16,5 +20,11 @@ describe("reverse", () => {
 
   it("is its own inverse", () => {
     expect(reverseString(reverseString("obfuscated"))).toBe("obfuscated");
+  });
+
+  it("reverses by code point, not UTF-16 code unit, so surrogate pairs survive", () => {
+    // A naive input.split("").reverse().join("") would split this emoji's
+    // surrogate pair apart and corrupt it.
+    expect(reverseString("a🔥b")).toBe("b🔥a");
   });
 });
