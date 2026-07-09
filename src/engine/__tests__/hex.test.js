@@ -21,4 +21,8 @@ describe("hex", () => {
   it("round-trips multi-byte unicode text", () => {
     expect(hexDecode(hexEncode("échó 🔥"))).toBe("échó 🔥");
   });
+
+  it("round-trips the empty string", () => {
+    expect(hexDecode(hexEncode(""))).toBe("");
+  });
 });
