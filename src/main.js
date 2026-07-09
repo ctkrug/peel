@@ -5,12 +5,22 @@ import { createRenderer } from "./canvas/renderer.js";
 import { SAMPLE_PUZZLE } from "./data/samplePuzzle.js";
 import { formatElapsed } from "./ui/format.js";
 import { describeMove } from "./ui/historyView.js";
+import { createSfx } from "./audio/sfx.js";
 
 function mount(root) {
   root.innerHTML = `
     <header class="app-header">
-      <h1 class="wordmark">peel</h1>
-      <p class="tagline">${SAMPLE_PUZZLE.title}</p>
+      <div class="app-header__title">
+        <h1 class="wordmark">peel</h1>
+        <p class="tagline">${SAMPLE_PUZZLE.title}</p>
+      </div>
+      <button id="mute" class="mute-button" type="button" aria-pressed="false" aria-label="Mute sound">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path d="M4 9v6h4l5 5V4L8 9H4z" fill="currentColor" />
+          <path class="mute-button__wave" d="M16.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" />
+          <path class="mute-button__slash" d="M18 9l4 6M22 9l-4 6" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" />
+        </svg>
+      </button>
     </header>
     <main class="layout">
       <div class="board-frame" id="board-frame">
@@ -40,11 +50,27 @@ function mount(root) {
   const timerEl = root.querySelector("#timer");
   const historyEl = root.querySelector("#history");
   const undoButton = root.querySelector("#undo");
+  const muteButton = root.querySelector("#mute");
   const renderer = createRenderer(canvas);
+  const sfx = createSfx(window.localStorage);
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   let state = createPuzzleState(SAMPLE_PUZZLE);
   let timerHandle = null;
+  let wasComplete = false;
+
+  function updateMuteButton() {
+    const muted = sfx.isMuted();
+    muteButton.classList.toggle("mute-button--muted", muted);
+    muteButton.setAttribute("aria-pressed", String(muted));
+    muteButton.setAttribute("aria-label", muted ? "Unmute sound" : "Mute sound");
+  }
+
+  muteButton.addEventListener("click", () => {
+    sfx.setMuted(!sfx.isMuted());
+    updateMuteButton();
+  });
+  updateMuteButton();
 
   function shakeBoard() {
     boardFrame.classList.remove("board-frame--shake");
@@ -63,6 +89,7 @@ function mount(root) {
   for (const operationId of listOperations()) {
     const button = document.createElement("button");
     button.textContent = OPERATIONS[operationId].label;
+    button.addEventListener("mouseenter", () => sfx.hover());
     button.addEventListener("click", () => {
       const movesBefore = state.history.length;
       state = attemptMove(state, operationId, Date.now());
@@ -70,11 +97,17 @@ function mount(root) {
         timerHandle = setInterval(tickTimer, 250);
       }
       const lastMove = state.history.length > movesBefore ? state.history.at(-1) : null;
+      if (lastMove?.ok && lastMove.onPath) {
+        sfx.moveSuccess();
+      } else if (lastMove) {
+        sfx.moveFail();
+      }
       update(lastMove);
     });
     toolbox.appendChild(button);
   }
 
+  undoButton.addEventListener("mouseenter", () => sfx.hover());
   undoButton.addEventListener("click", () => {
     state = undoLastMove(state);
     update();
@@ -97,6 +130,10 @@ function mount(root) {
     if (state.complete) {
       moveCountEl.textContent += " — solved!";
     }
+    if (state.complete && !wasComplete) {
+      sfx.win();
+    }
+    wasComplete = state.complete;
     tickTimer();
     renderHistory();
   }
