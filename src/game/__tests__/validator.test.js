@@ -61,6 +61,21 @@ describe("sample puzzle", () => {
 
     expect(solvedState).toBe(state);
   });
+
+  it("undo is a no-op on a fresh puzzle with no history", () => {
+    const state = createPuzzleState(SAMPLE_PUZZLE);
+
+    expect(undoLastMove(state)).toBe(state);
+  });
+
+  it("undo is a no-op once the puzzle is complete", () => {
+    let state = createPuzzleState(SAMPLE_PUZZLE);
+    for (const operationId of SAMPLE_PUZZLE.solutionChain) {
+      state = attemptMove(state, operationId, 1000);
+    }
+
+    expect(undoLastMove(state)).toBe(state);
+  });
 });
 
 describe("isOnPathMove / onPath tagging", () => {
