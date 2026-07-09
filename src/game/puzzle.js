@@ -22,5 +22,5 @@ export function elapsedMs(state, now) {
     return 0;
   }
   const end = state.complete ? state.completedAt : now;
-  return end - state.startedAt;
+  return Math.max(0, end - state.startedAt);
 }
