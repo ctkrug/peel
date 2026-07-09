@@ -1,19 +1,26 @@
 import { createPuzzleState, elapsedMs, moveCount } from "./game/puzzle.js";
 import { attemptMove, undoLastMove } from "./game/validator.js";
+import { getDailyPuzzle } from "./game/dailyPuzzle.js";
 import { listOperations, OPERATIONS } from "./engine/registry.js";
 import { createRenderer } from "./canvas/renderer.js";
-import { SAMPLE_PUZZLE } from "./data/samplePuzzle.js";
+import { PUZZLES } from "./data/puzzles.js";
 import { formatElapsed } from "./ui/format.js";
 import { describeMove } from "./ui/historyView.js";
 import { createSfx } from "./audio/sfx.js";
 import { randomGlyphs } from "./canvas/glitchText.js";
 
+function todayDateString() {
+  return new Date().toISOString().slice(0, 10);
+}
+
 function mount(root) {
+  const todaysPuzzle = getDailyPuzzle(todayDateString(), PUZZLES);
+
   root.innerHTML = `
     <header class="app-header">
       <div class="app-header__title">
         <h1 class="wordmark">peel</h1>
-        <p class="tagline">${SAMPLE_PUZZLE.title}</p>
+        <p class="tagline">${todaysPuzzle.title}</p>
       </div>
       <button id="mute" class="mute-button" type="button" aria-pressed="false" aria-label="Mute sound">
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
@@ -79,7 +86,7 @@ function mount(root) {
   const sfx = createSfx(window.localStorage);
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  let state = createPuzzleState(SAMPLE_PUZZLE);
+  let state = createPuzzleState(todaysPuzzle);
   let timerHandle = null;
   let wasComplete = false;
 
@@ -131,7 +138,7 @@ function mount(root) {
       clearInterval(timerHandle);
       timerHandle = null;
     }
-    state = createPuzzleState(SAMPLE_PUZZLE);
+    state = createPuzzleState(todaysPuzzle);
     wasComplete = false;
     update();
   });
