@@ -1,23 +1,12 @@
 import { SAMPLE_PUZZLE } from "../data/samplePuzzle.js";
 
 /**
- * Deterministically picks a puzzle for a given date string from a list — the
- * same date always maps to the same puzzle, with no server or randomness
- * involved. Falls back to SAMPLE_PUZZLE if the list is empty.
+ * Picks the puzzle assigned to a given date string — each authored puzzle's
+ * `id` IS the date it's meant to run on (see docs/PUZZLES.md), so this is an
+ * exact lookup, not a rotation across the list. Falls back to SAMPLE_PUZZLE
+ * for any date with no authored puzzle, so the game is always playable.
  */
 export function getDailyPuzzle(dateString, puzzles) {
-  if (!puzzles || puzzles.length === 0) {
-    return SAMPLE_PUZZLE;
-  }
-
-  const index = hashString(dateString) % puzzles.length;
-  return puzzles[index];
-}
-
-function hashString(text) {
-  let hash = 0;
-  for (let i = 0; i < text.length; i++) {
-    hash = (hash * 31 + text.charCodeAt(i)) >>> 0;
-  }
-  return hash;
+  const match = (puzzles ?? []).find((puzzle) => puzzle.id === dateString);
+  return match ?? SAMPLE_PUZZLE;
 }
