@@ -13,4 +13,8 @@ describe("rot13", () => {
   it("leaves non-letters untouched", () => {
     expect(rot13("echo 42!")).toBe("rpub 42!");
   });
+
+  it("leaves unicode characters outside a-z/A-Z untouched", () => {
+    expect(rot13("café 🔥")).toBe("pnsé 🔥");
+  });
 });
