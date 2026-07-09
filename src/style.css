@@ -46,6 +46,10 @@ h3 {
 }
 
 button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
   font-family: var(--font-ui);
   background: var(--surface-2);
   color: var(--text);
