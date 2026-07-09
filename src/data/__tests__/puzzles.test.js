@@ -24,6 +24,11 @@ describe("PUZZLES", () => {
     expect(PUZZLES.some((puzzle) => puzzle.solutionChain.includes("eval-unwrap"))).toBe(true);
   });
 
+  it("every puzzle has a distinct id, since getDailyPuzzle matches the first one found", () => {
+    const ids = PUZZLES.map((puzzle) => puzzle.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
   it("every solutionChain step is a registered operation id", () => {
     const validIds = new Set(listOperations());
     for (const puzzle of PUZZLES) {
