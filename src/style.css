@@ -76,6 +76,10 @@ button:disabled {
 }
 
 .app-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
   padding: var(--space-3) var(--space-4) 0;
 }
 
@@ -88,6 +92,33 @@ button:disabled {
 .tagline {
   margin: var(--space-1) 0 0;
   color: var(--text-muted);
+}
+
+.mute-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.mute-button__slash {
+  opacity: 0;
+}
+
+.mute-button--muted {
+  color: var(--text-muted);
+}
+
+.mute-button--muted .mute-button__wave {
+  opacity: 0;
+}
+
+.mute-button--muted .mute-button__slash {
+  opacity: 1;
 }
 
 .layout {
