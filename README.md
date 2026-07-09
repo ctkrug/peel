@@ -23,20 +23,23 @@ that game.
 
 ## Core features
 
-- A hand-built string-transform engine (base64, hex, ROT13, URL-encoding, string reversal) that
-  chains operations and validates partial decode state at every move.
+- A hand-built string-transform engine (base64, hex, ROT13, URL-encoding, string reversal, nested
+  `eval`/`atob` unwrapping) that chains operations and validates partial decode state at every
+  move.
 - A move-by-move reveal on a canvas board: each click on a transform button peels one layer off
   the obfuscated string with a crossfade, and wrong/off-path moves shake the board.
 - Move history, undo, a live timer that freezes on solve, and a win overlay with your stats.
+- A deterministic daily puzzle: today's date resolves to the same hand-authored puzzle for
+  everyone, no server involved (see [`docs/PUZZLES.md`](docs/PUZZLES.md) for the format).
+- A spoiler-free, Wordle-style Share button on the win screen — copies your move grid (never the
+  plaintext or obfuscated text) to the clipboard.
 - Synth WebAudio SFX (hover/success/fail/win) with a persisted mute toggle — no audio files.
 - Terminal/CRT-phosphor visual direction end to end (see [`docs/DESIGN.md`](docs/DESIGN.md)).
 
 ## Planned
 
-- Nested `eval` unwrapping, additional hand-authored puzzles, and deterministic daily rotation
-  (see [`docs/BACKLOG.md`](docs/BACKLOG.md) Epic 4).
-- A shareable, spoiler-free result grid (Wordle-style).
-- A streak/history view so daily play compounds over time.
+- A streak/history view so daily play compounds over time (see
+  [`docs/BACKLOG.md`](docs/BACKLOG.md) for what's left).
 
 ## Stack
 
@@ -47,8 +50,9 @@ that game.
 
 ## Status
 
-The core peel loop and its juice (animation, sound, win screen) are playable end to end against
-one hand-verified sample puzzle. See [`docs/VISION.md`](docs/VISION.md) for the full design,
+The full v1 feature set is playable end to end: the core peel loop, its juice (animation, sound,
+win screen), a live timer, a shareable result, and daily rotation across multiple hand-verified
+puzzles. See [`docs/VISION.md`](docs/VISION.md) for the full design,
 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the module map, and
 [`docs/BACKLOG.md`](docs/BACKLOG.md) for the build plan.
 
