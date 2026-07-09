@@ -6,6 +6,7 @@ import { SAMPLE_PUZZLE } from "./data/samplePuzzle.js";
 import { formatElapsed } from "./ui/format.js";
 import { describeMove } from "./ui/historyView.js";
 import { createSfx } from "./audio/sfx.js";
+import { randomGlyphs } from "./canvas/glitchText.js";
 
 function mount(root) {
   root.innerHTML = `
@@ -41,6 +42,24 @@ function mount(root) {
         </section>
       </aside>
     </main>
+    <div id="win-overlay" class="win-overlay" hidden>
+      <div id="win-rain" class="win-overlay__rain" aria-hidden="true"></div>
+      <div class="win-card" role="dialog" aria-modal="true" aria-labelledby="win-title">
+        <p class="win-card__eyebrow">Solved</p>
+        <h2 id="win-title" class="win-card__title">peel complete</h2>
+        <dl class="win-card__stats">
+          <div>
+            <dt>Moves</dt>
+            <dd id="win-moves">0</dd>
+          </div>
+          <div>
+            <dt>Time</dt>
+            <dd id="win-time">0:00</dd>
+          </div>
+        </dl>
+        <button id="win-play-again" class="win-card__cta" type="button">Play again</button>
+      </div>
+    </div>
   `;
 
   const canvas = root.querySelector("#board");
@@ -51,6 +70,11 @@ function mount(root) {
   const historyEl = root.querySelector("#history");
   const undoButton = root.querySelector("#undo");
   const muteButton = root.querySelector("#mute");
+  const winOverlay = root.querySelector("#win-overlay");
+  const winRain = root.querySelector("#win-rain");
+  const winMovesEl = root.querySelector("#win-moves");
+  const winTimeEl = root.querySelector("#win-time");
+  const winPlayAgainButton = root.querySelector("#win-play-again");
   const renderer = createRenderer(canvas);
   const sfx = createSfx(window.localStorage);
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -71,6 +95,46 @@ function mount(root) {
     updateMuteButton();
   });
   updateMuteButton();
+
+  function spawnMatrixRain() {
+    winRain.innerHTML = "";
+    const columns = 28;
+    for (let i = 0; i < columns; i++) {
+      const drop = document.createElement("span");
+      drop.className = "win-overlay__drop";
+      drop.style.left = `${(i / columns) * 100}%`;
+      drop.style.animationDelay = `${Math.random() * 1.2}s`;
+      drop.style.animationDuration = `${1.4 + Math.random() * 1.2}s`;
+      drop.textContent = randomGlyphs(3 + Math.floor(Math.random() * 4));
+      winRain.appendChild(drop);
+    }
+  }
+
+  function showWinOverlay() {
+    winMovesEl.textContent = String(moveCount(state));
+    winTimeEl.textContent = formatElapsed(elapsedMs(state, Date.now()));
+    winOverlay.hidden = false;
+    if (!reduceMotion) {
+      spawnMatrixRain();
+    }
+    winPlayAgainButton.focus();
+  }
+
+  function hideWinOverlay() {
+    winOverlay.hidden = true;
+    winRain.innerHTML = "";
+  }
+
+  winPlayAgainButton.addEventListener("click", () => {
+    hideWinOverlay();
+    if (timerHandle !== null) {
+      clearInterval(timerHandle);
+      timerHandle = null;
+    }
+    state = createPuzzleState(SAMPLE_PUZZLE);
+    wasComplete = false;
+    update();
+  });
 
   function shakeBoard() {
     boardFrame.classList.remove("board-frame--shake");
@@ -132,6 +196,7 @@ function mount(root) {
     }
     if (state.complete && !wasComplete) {
       sfx.win();
+      showWinOverlay();
     }
     wasComplete = state.complete;
     tickTimer();
