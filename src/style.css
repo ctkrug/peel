@@ -329,6 +329,112 @@ button:disabled {
   color: var(--danger);
 }
 
+.win-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5, 8, 7, 0.86);
+  backdrop-filter: blur(2px);
+}
+
+.win-overlay[hidden] {
+  display: none;
+}
+
+.win-overlay__rain {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.win-overlay__drop {
+  position: absolute;
+  top: -10%;
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 14px;
+  opacity: 0;
+  animation: matrix-fall linear infinite;
+  text-shadow: 0 0 8px rgba(78, 242, 156, 0.6);
+}
+
+@keyframes matrix-fall {
+  0% {
+    transform: translateY(-20%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(1100%);
+    opacity: 0;
+  }
+}
+
+.win-card {
+  position: relative;
+  z-index: 1;
+  width: min(360px, 90vw);
+  padding: var(--space-4);
+  background: var(--surface-1);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  box-shadow: 0 0 32px rgba(78, 242, 156, 0.35), 0 8px 24px rgba(0, 0, 0, 0.6);
+  text-align: center;
+}
+
+.win-card__eyebrow {
+  margin: 0;
+  color: var(--accent-support);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 13px;
+}
+
+.win-card__title {
+  margin: var(--space-1) 0 var(--space-3);
+  font-size: 25px;
+  color: var(--accent);
+}
+
+.win-card__stats {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  margin: 0 0 var(--space-3);
+}
+
+.win-card__stats dt {
+  margin: 0 0 4px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.win-card__stats dd {
+  margin: 0;
+  font-size: 25px;
+  font-family: var(--font-display);
+  color: var(--text);
+}
+
+.win-card__cta {
+  width: 100%;
+  background: var(--accent);
+  color: var(--surface-1);
+  border-color: var(--accent);
+  font-weight: 600;
+  padding: var(--space-2);
+}
+
+.win-card__cta:hover {
+  box-shadow: 0 0 16px rgba(78, 242, 156, 0.5);
+}
+
 @media (min-width: 768px) {
   .layout {
     grid-template-columns: 65% 1fr;
